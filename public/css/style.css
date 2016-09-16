@@ -1,0 +1,9 @@
+*{ margin:0 auto; list-style-type:none;}
+
+body{width: 100%; }
+.head{height: 71px; background: #f1f1f1; border-bottom: 1px solid #e5e5e5;}
+.contain{background: #;}
+.form{ margin-top: 5em; text-align: left;  }
+.loginCntr{ margin-top:100px;}
+.loginCntr h3{ color:#449d44}
+.error{color:#c9302c; font-size:13px;}

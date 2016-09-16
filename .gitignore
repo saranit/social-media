@@ -1,0 +1,55 @@
+.DS_Store
+
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+/vendor/
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
+
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+application/config/config.php
+application/config/config.php
+application/config/database.php
+uploads/IMG_16042016_150006.png
+application/config/config.php
+application/config/config.php
+application/config/database.php
+application/config/config.php
+application/config/database.php
+application/modules/agent/views/agent_login.php
+application/modules/agent/views/create_subagent.php
+application/modules/agent/views/create_subagent.php
+application/config/database.php
+application/config/config.php
+<<<<<<< HEAD
+application/config/config.php
+application/config/config.php
+application/config/config.php
+=======
+>>>>>>> origin/master
+application/config/config.php
+application/modules/agent/views/agent_changepassword.php
+application/config/config.php
+application/config/config.php
+application/modules/agent/views/agent_dashboard.php
+application/modules/agent/views/agent_dashboard.php
+application/modules/agent/controllers/agent.php
+application/config/config.php
