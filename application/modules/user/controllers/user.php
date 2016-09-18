@@ -17,6 +17,13 @@
 	{
 	    $data['pagecontent'] = 'login_social_media';
 		
+		if($this->session->userdata('user_data'))
+		{
+			redirect('user/dashboard');
+		}
+		
+		
+		
 		if($this->input->post('login'))
 		{
 			$email=$this->input->post('email')?$this->input->post('email'):'';
