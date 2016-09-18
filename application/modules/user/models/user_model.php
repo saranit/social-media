@@ -29,6 +29,19 @@ Class User_model Extends CI_Model
 		}
 		
 	}
+	public function dynamic_inser_and_get_inserted_id($table,$values)
+	{
+		$res=$this->db->insert($table,$values);
+		if($res)
+		{
+			return $this->db->insert_id();
+		}
+		else
+		{
+			return 0;
+		}
+		
+	}
 	public function email_exist_or_not($email,$user_id)
 	{
 		if($user_id !=0)

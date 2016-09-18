@@ -41,10 +41,18 @@
 		}
 		  $this->load->view('common/page-layout',$data);	
 	}
+	public function dashboard()
+	{
+		if(!$this->session->userdata('user_data'))
+		{
+			redirect('user');
+		}
+		$this->load->view('dashboard');
+	}
 
 	public function linkedin()
 	{
-    $config['callback_url'] ='http://localhost/social_media/user/linkedin';
+    $config['callback_url'] ='http://localhost/social/social-media/user/linkedin';
 	 $config['Client_ID'] = '81b0m5ddf6226a';
 	$config['Client_Secret'] = 'VTBC2LtSxXwEHNpH';
     //echo 'test'; die;
@@ -63,9 +71,10 @@ if(isset($_REQUEST['code']))
 	
 	//print_r($return); die;
 	
-    if($return['error'])
+    if(isset($return['error']) && $return['error'] !='')
     {
         echo 'Some error occured<br><br>'.$return['error_description'].'<br><br>Please Try again.';
+		redirect('user/linkedin');
     }
     else   
     {
@@ -84,8 +93,51 @@ if(isset($_REQUEST['code']))
         $positions      = isset($User->positions->values[0]->company->name) ? $User->positions->values[0]->company->name : '';
         $positionstitle = isset($User->positions->values[0]->title) ? $User->positions->values[0]->title : '';
         $publicProfileUrl = isset($User->publicProfileUrl) ? $User->publicProfileUrl : '';
-       
-        echo "
+		
+		$table_name='sm_users';
+		$where= array('email'=>$emailAddress);
+		$selected='*';
+		$user_data = $this->user_model->get_row($table_name,$where,$selected);
+        //print_r($user_data); die;
+		if(count($user_data) <= 0)
+		{
+			
+			// data insert into social media user table
+			$common_function=new common_function();
+		    $authentication_key = $common_function->generateOneTimePassword();
+			$values=array('first_name'=>$firstName,'last_name'=>$lastName,'email'=>$emailAddress,'user_authentication_key'=>$authentication_key);
+			$get_user_id = $this->user_model->dynamic_inser_and_get_inserted_id($table_name,$values);
+            
+			// data insert into linked table 
+			if($get_user_id >0)
+			{
+				
+				$linkedin_table='sc_linkedin_data';
+				
+				$linked_data = array('linked_user_id'=>$id,'first_name'=>$firstName,'last_name'=>$lastName,'email'=>$emailAddress,'headline'=>$headline,
+                             'image_url'=>$pictureUrls,'location'=>$location,'positions'=>$positions,'positionstitle'=>$positionstitle,
+                             'publicProfileUrl'	=>$publicProfileUrl,'user_id'=>	$get_user_id);
+				$linked_data =$this->user_model->dynamic_inserting_data($linkedin_table,$linked_data);
+				if($linked_data == 1 )
+				{
+					$this->session->set_userdata('user_data',$get_user_id);
+				    redirect('user/dashboard');
+				}
+				else
+				{
+					redirect('user/linkedin');
+				}
+				
+			}
+			
+		}
+		// already login with linkedin account directly login
+		else
+		{
+		   $this->session->set_userdata('user_data',$user_data);
+		   redirect('user/dashboard');
+		}
+		/* echo "
         <table border='1' cellpadding='7' style='border-collapse: collapse;'>
             <tr style='text-align: center;'>
                 <td colspan='2'><img src='".$pictureUrls."' width='100' /><br>".$headline."</td>
@@ -119,7 +171,9 @@ if(isset($_REQUEST['code']))
                 <td><a href='".$publicProfileUrl."' target='_blank'>".$publicProfileUrl."</a></td>
             </tr>
         </table>
-        ";
+		
+		
+        "; */
         /* $query = "INSERT INTO `test`.`users` 
     (`userid`, 
     `firstName`, 
@@ -159,27 +213,19 @@ else
 
 }
 
-public function post_curl($url,$param="")
+function post_curl($url,$param="")
 {
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL,$url);
-	if($param!="")
+    if($param!="")
         curl_setopt($ch,CURLOPT_POSTFIELDS,$param);
         
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	
-	$result = curl_setopt($ch, CURLOPT_CAINFO, '/path/to/cacert.pem'); //die;
-	
     $result = curl_exec($ch);
-	//phpinfo();die;
-	if ($result === false) $result = curl_error($ch);
-      echo stripslashes($result); die;
-	
-	curl_close($ch);
-	
-    return var_dump($result); 
-	
-}	
+    curl_close($ch);
+    
+    return $result;
+}
 	
 	public function register()
 	{		

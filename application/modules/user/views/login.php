@@ -1,1 +1,1 @@
-<a href="http://localhost/social_media/user/social/session/twitter">Twitter login</a>
+<a href="<?php echo base_url()?>user/social/session/twitter">Twitter login</a>
