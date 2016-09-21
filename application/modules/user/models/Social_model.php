@@ -8,7 +8,8 @@
 	}
 	public function insertTwitterData($data)
 	{
-	       $this->db->select('*');
+	      // print_r($data); die;
+		   $this->db->select('*');
 	       $this->db->from('user');
 	       $this->db->where('uid',$data['uid']);
 	       $result = $this->db->get()->row();
@@ -18,7 +19,7 @@
 	              $this->db->update('users',$data);
 	              echo "logged in success to dashboard";die;
 	       }else{
-	        $this->db->insert('users',$data); 
+	        $this->db->insert('user',$data); 
 	         echo "logged in success to dashboard";die;
 	       }
 	}
