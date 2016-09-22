@@ -20,7 +20,8 @@
 		 $twitteroauth = new TwitterOAuth(YOUR_CONSUMER_KEY, YOUR_CONSUMER_SECRET);
 		 //print_r($twitteroauth); die;
          //$request_token = $twitteroauth->getRequestToken('http://w3code.in/index.php/social/getTwitterData');
-         $request_token = $twitteroauth->getRequestToken(''); //'http://localhost/social_media/user/social'
+         $request_token = $twitteroauth->getRequestToken('http://localhost/social/social-media/user/social/getTwitterData'); 
+		 //'http://localhost/social_media/user/social'
 		 //print_r($request_token); die; 
          $_SESSION['oauth_token'] = $request_token['oauth_token'];
 		 //print_r($_SESSION['oauth_token']); die;
