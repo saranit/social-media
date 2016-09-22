@@ -16,7 +16,7 @@
 	       if(!empty($result))
 	       {
 	              $this->db->where('uid',$data['uid']);
-	              $this->db->update('users',$data);
+	              $this->db->update('user',$data);
 	              echo "logged in success to dashboard";die;
 	       }else{
 	        $this->db->insert('user',$data); 

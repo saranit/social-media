@@ -482,6 +482,7 @@ function post_curl($url,$param="")
 			
 		}
 	}
+	
     public function logout()
 	{
 		$this->session->sess_destroy();
