@@ -56,11 +56,7 @@
 		}
 		$this->load->view('dashboard');
 	}
-    public function fb_dashboard()
-	{
-		echo 'user successfully logged in'; die;
-		//$this->load->view('dashboard');
-	}
+
 	public function linkedin()
 	{
     $config['callback_url'] ='http://localhost/social/social-media/user/linkedin';
