@@ -42,6 +42,7 @@ Class User_model Extends CI_Model
 		}
 		
 	}
+	
 	public function email_exist_or_not($email,$user_id)
 	{
 		if($user_id !=0)

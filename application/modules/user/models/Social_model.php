@@ -23,4 +23,50 @@
 	         echo "logged in success to dashboard";die;
 	       }
 	}
+	
+	public function dynamic_inser_and_get_inserted_id($table,$values)
+	{
+		$res=$this->db->insert($table,$values);
+		if($res)
+		{
+			return $this->db->insert_id();
+		}
+		else
+		{
+			return 0;
+		}
+		
+	}
+	
+	public function dynamic_inserting_data($table,$values)
+	{
+		$res=$this->db->insert($table,$values);
+		if($res)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+		
+	}
+	public function get_row($table_name,$where,$selected)
+	{
+		//$res=$this->db->query($query);
+		$this->db->where($where);
+		$this->db->select($selected);
+		$res=$this->db->get($table_name);
+		if($res->num_rows()>0)
+		{
+			return $res->row();
+		}
+		else
+		{
+			return array();
+		}
+		
+		
+	}
+	
 }
