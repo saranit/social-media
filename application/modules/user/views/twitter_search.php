@@ -32,8 +32,11 @@ $access_token_secret = "74SLvElGqFfgFlVBFfksg1TwMmzHer5ak9Zm9PlQs5ck4 ";
 		if(isset($tweets) && count($tweets) > 0 ) 
 	    {
 			foreach ($tweets->statuses as $key => $tweet) 
-		    { ?>
-		         
+		    { 
+			 //echo $tweet->id ; die;
+			?>
+		        
+				
 				Tweet : <img src="<?=$tweet->user->profile_image_url;?>" /><?=$tweet->text; ?> 
 				
 				
@@ -42,6 +45,9 @@ $access_token_secret = "74SLvElGqFfgFlVBFfksg1TwMmzHer5ak9Zm9PlQs5ck4 ";
 				
 				$connection = new TwitterOAuth($consumer_key,$consumer_secret,$access_token,$access_token_secret);
 				
+				//$connection = getConnectionWithAccessToken($consumer_key, $consumer_secret, $access_token, $access_token_secret);
+				
+				//print_r($connection); die;
 				$var = $connection->post('statuses/retweet/'.$tweet->id_str);  
 				
 				print_r($var); ?>
