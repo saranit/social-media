@@ -63,7 +63,7 @@
 		   $where=array('twitter_id'=>$twitter_id);
 		   
 		   $twitter_id_check = $this->Social_model->get_row($table_name,$where,$selected);
-		   
+		   //print_r($twitter_id_check); die;
 		   if(count($twitter_id_check) <= 0)
 		   {
 				
@@ -76,13 +76,19 @@
 				
 				$twitter_info = $this->Social_model->dynamic_inserting_data($twitter_table,$twitter_data); 
                 			
-				
+				$this->session->set_userdata('user_id_only',$user_id);
 				redirect('user/social/email_authentication');
 				//die;
 				
 		   }
 		   else
 		   {
+			 
+			   // allready registerd user will directly go to dashboard
+			   $where2 = array('twitter_id' =>$twitter_id);
+			   $selected2= '*';
+			   $user_data = $this->Social_model->get_row($table_name,$where2,$selected2);
+			   $user_id=$user_data->user_id;
 			   $this->session->set_userdata('user_data',$user_id);
 		       redirect('user/dashboard');
 			   
@@ -103,31 +109,114 @@
            }
        }  
     }
-	public function twitter_search()
+	
+	public function dummy()
 	{
-		$this->load->view('linked_search');
-				
+		$data['pagecontent'] = 'dummy';
+		$this->load->view('common/page-layout',$data);
 	}
 	public function email_authentication()
 	{
+		
+		if(!$this->session->userdata('user_id_only'))
+		{
+			redirect('user/social');
+		}
+		
+        $data['pagecontent'] = 'twitter_more_authentication_login';
+		
+		$user_id = $this->session->userdata('user_id_only');
+		
 		if($this->input->post('submit_email'))
 		{
 			$email = $this->input->post('email')?trim($this->input->post('email')):'';
 			
 			$table_name = 'sm_users';
-			$where=array('email' => $email);
+			$where=array('email'=> $email);
 			$columns = 'email';
-			$email_check = $this->Social_model->dinamically_check_data($table_name,$where,$columns)
+			$email_check = $this->Social_model->dinamically_check_data($table_name,$where,$columns);
 			if($email_check == 1)
 			{
-				$this->session->set_flashdata('user_fail', 'Email exists in our system');
+				$this->session->set_flashdata('user_fail', 'There is an existing account associated with this email');
 				redirect('user/social/email_authentication');
 			}
 			
+			$update = array('email'=> $email);
+			$where  = array('user_id'=>$user_id);
+			
+			$email_update = $this->Social_model->update_func($table_name,$update,$where);
+			
+			if($email_update == 1)
+			{
+				$this->session->set_userdata('user_data',$user_id);
+				redirect('user/dashboard');
+			}
+			else
+			{
+				redirect('user/email_authentication');
+			}
 			
 		}
 		
-		$this->load->view('twitter_more_authentication_login');
+		$this->load->view('common/page-layout',$data);
+	}
+	
+	public function twitter_search()
+	{
+		 //print_r($this->session->userdata('user_data')); die;
+		if(!$this->session->userdata('user_data'))
+		{
+			redirect('user/social');
+		}
+		
+		$consumer_key = "UmuoIrhenIFmbWO7cYHTxQ1I2";
+		$consumer_secret = "IINeTdTZPjnDMpTGYt3LnSnZWUX1LuzUhGExbAVkQAneV5thUZ";
+		$access_token = "988242884-QoCLdJZXKsFsxhtMg44jXLTE7eFl5kGE6xCjKDb7";
+		$access_token_secret = "74SLvElGqFfgFlVBFfksg1TwMmzHer5ak9Zm9PlQs5ck4";
+		
+		if(isset($_POST['submit']))
+		{
+			$search = $_POST['linked_search']; 
+			
+			$table_name= 'sm_keywords';
+			$where     =  array('user_id'=>$this->session->userdata('user_data'));
+			$selected  = 'Keyword_names';
+			
+			$user_keywords = $this->Social_model->get_row($table_name,$where,$selected);
+			
+			$key_total_array = explode(',',$user_keywords->Keyword_names);
+			//print_r($key_total_array); die;
+			
+			
+            $array_search = array_search($search,$key_total_array);
+			
+			//print_r($array_search); die;
+			if($array_search  == '')
+			{
+				echo 'given key is not exit in database keys sorry......'; die;
+			}
+			
+			$twitter = new TwitterOAuth($consumer_key,$consumer_secret,$access_token,$access_token_secret);
+			$data['tweets'] = $twitter->get('https://api.twitter.com/1.1/search/tweets.json?q='.$search.
+			'&result_type=recent&count=500&lang=en');
+			if(count($data['tweets']) > 0)
+			{
+				$data['tweets'];
+			}
+			else
+			{
+				$data['tweets']= array();
+			}
+			//print_r($data['tweets']); die;
+	    }
+	    $this->load->view('twitter_search',@$data);
+	}
+	public function re_tweet()
+	{
+		
+		
+		
+		$this->load->view('re_tweet');
 	}
     
 }

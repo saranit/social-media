@@ -233,6 +233,7 @@ function post_curl($url,$param="")
         
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $result = curl_exec($ch);
+	//var_dump($result); die;
     curl_close($ch);
     
     return $result;
@@ -309,7 +310,7 @@ function post_curl($url,$param="")
 	}
 	public function smtp_mail($to_mail,$subject,$body) 
 	{
-		
+		//echo $to_mail; die;
 		//$to_mail ="saran.saladi@gmail.com";
 		//$subject="sub";
 		//$body ='body';
@@ -317,16 +318,16 @@ function post_curl($url,$param="")
 		$ci = get_instance();
 		$ci->load->library('email');
 		$config['protocol'] = "smtp";
-		$config['smtp_host'] = "smtp.1and1.com";
-		$config['smtp_port'] = 587;
-		$config['smtp_user'] = "susant.bharadwaj@wenso.co.uk"; 
-		$config['smtp_pass'] = "susant1981";
+		$config['smtp_host'] = "mail.godoho.com";
+		$config['smtp_port'] = 2525;
+		$config['smtp_user'] = "sales@cozyprint.in"; 
+		$config['smtp_pass'] = "cozy123";
 		$config['charset'] = "utf-8";
 		$config['mailtype'] = "html";
 		$config['newline'] = "\r\n";
 
 		$ci->email->initialize($config);
-		$ci->email->from("senthil.kumar@wenso.co.uk", "Social Media");
+		$ci->email->from("saran.kumar@wenso.co.uk", "Social Media");
 		$ci->email->to($to_mail);
 		$this->email->reply_to("saran.kumar@wenso.co.uk","Social Media");
 		$ci->email->subject($subject);
@@ -491,6 +492,46 @@ function post_curl($url,$param="")
 	{
 		$this->session->sess_destroy();
 		redirect('user');
+		
+	}
+    public function key_words()
+    {
+	 		
+		if(!$this->session->userdata('user_data'))
+		{
+			redirect('user');
+		}
+		$data['pagecontent'] = 'key_words_storeage';
+		$user_id =$this->session->userdata('user_data');
+		if($this->input->post('sub_reg'))
+		{
+			$keywords_table='sm_keywords';
+			$key_1= $this->input->post('Keyword_1');
+			$keys = implode(',',$key_1);
+			
+			$insert_data=array('Keyword_names'=>$keys,'user_id'=>$user_id); 
+			
+			$linked_data =$this->user_model->dynamic_inserting_data($keywords_table,$insert_data);
+			if($linked_data == 1)
+			{
+				$this->session->set_flashdata('keywords', 'Keywords inserted succesully...');
+				redirect('user/key_words');
+			}
+			else
+			{  
+		        $this->session->set_flashdata('keywords', 'Keywords inserted failed...');
+				redirect('user/key_words');
+			}
+	    }
+		
+     	$this->load->view('common/page-layout',$data);	  
+    }
+    public function twitter_keyword_validation()
+	{
+		echo $twitter_key = $this->input->post('twitter_key'); die;
+		
+		
+		
 		
 	}	
 	

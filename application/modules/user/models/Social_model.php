@@ -68,5 +68,36 @@
 		
 		
 	}
+	public function dinamically_check_data($table_name,$where,$columns)
+	{
+		$this->db->where($where);
+		$this->db->select($columns);
+		$res=$this->db->get($table_name);
+		if($res->num_rows()>0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public function update_func($table_name,$update,$where)
+	{
+		$this->db->where($where);
+		$this->db->update($table_name,$update);
+		//$this->db->get();
+		$res=$this->db->affected_rows();
+		if($res)
+		{
+			return 1;
+		}
+		else{
+			return 0;
+		}
+		
+		
+	}
 	
 }
